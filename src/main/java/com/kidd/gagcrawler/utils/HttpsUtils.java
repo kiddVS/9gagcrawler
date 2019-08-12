@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HttpsUtils {
-    public String doGetStr(String url){
+    public static String doGetStr(String url){
         RestTemplate restTemplateHttps = new RestTemplate(new HttpsClientRequestFactory());
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
         StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));

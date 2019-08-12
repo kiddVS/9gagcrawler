@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kidd.gagcrawler.mapper.GagPoMapper">
+  <resultMap id="BaseResultMap" type="com.kidd.gagcrawler.model.GagPo">
+    <id column="GlobalId" jdbcType="INTEGER" property="globalid" />
+    <result column="Id" jdbcType="VARCHAR" property="id" />
+    <result column="Title" jdbcType="VARCHAR" property="title" />
+    <result column="Images" jdbcType="VARCHAR" property="images" />
+    <result column="Url" jdbcType="VARCHAR" property="url" />
+    <result column="CommentsCount" jdbcType="INTEGER" property="commentscount" />
+    <result column="CreationTs" jdbcType="VARCHAR" property="creationts" />
+    <result column="DescriptionHtml" jdbcType="VARCHAR" property="descriptionhtml" />
+    <result column="DownVoteCount" jdbcType="INTEGER" property="downvotecount" />
+    <result column="HasLongPostCover" jdbcType="INTEGER" property="haslongpostcover" />
+    <result column="IsVoteMasked" jdbcType="INTEGER" property="isvotemasked" />
+    <result column="Nsfw" jdbcType="INTEGER" property="nsfw" />
+    <result column="Promoted" jdbcType="INTEGER" property="promoted" />
+    <result column="SourceDomain" jdbcType="VARCHAR" property="sourcedomain" />
+    <result column="SourceUrl" jdbcType="VARCHAR" property="sourceurl" />
+    <result column="Type" jdbcType="VARCHAR" property="type" />
+    <result column="UpVoteCount" jdbcType="INTEGER" property="upvotecount" />
+    <result column="CrawlerDate" jdbcType="TIMESTAMP" property="crawlerdate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    GlobalId, Id, Title, Images, Url, CommentsCount, CreationTs, DescriptionHtml, DownVoteCount, 
+    HasLongPostCover, IsVoteMasked, Nsfw, Promoted, SourceDomain, SourceUrl, Type, UpVoteCount, 
+    CrawlerDate
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from Gag
+    where GlobalId = #{globalid,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from Gag
+    where Id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectPhotoGagsGtDateTime" parameterType="java.time.LocalDateTime" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from Gag
+    where CrawlerDate > #{crawlerdate,jdbcType=TIMESTAMP}
+    and Type = 'Photo'
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from Gag
+    where GlobalId = #{globalid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.kidd.gagcrawler.model.GagPo">
+    insert into Gag (GlobalId, Id, Title, 
+      Images, Url, CommentsCount, 
+      CreationTs, DescriptionHtml, DownVoteCount, 
+      HasLongPostCover, IsVoteMasked, Nsfw, 
+      Promoted, SourceDomain, SourceUrl, 
+      Type, UpVoteCount, CrawlerDate
+      )
+    values (#{globalid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{images,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{commentscount,jdbcType=INTEGER}, 
+      #{creationts,jdbcType=VARCHAR}, #{descriptionhtml,jdbcType=VARCHAR}, #{downvotecount,jdbcType=INTEGER}, 
+      #{haslongpostcover,jdbcType=INTEGER}, #{isvotemasked,jdbcType=INTEGER}, #{nsfw,jdbcType=INTEGER}, 
+      #{promoted,jdbcType=INTEGER}, #{sourcedomain,jdbcType=VARCHAR}, #{sourceurl,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{upvotecount,jdbcType=INTEGER}, #{crawlerdate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kidd.gagcrawler.model.GagPo">
+    insert into Gag
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="globalid != null">
+        GlobalId,
+      </if>
+      <if test="id != null">
+        Id,
+      </if>
+      <if test="title != null">
+        Title,
+      </if>
+      <if test="images != null">
+        Images,
+      </if>
+      <if test="url != null">
+        Url,
+      </if>
+      <if test="commentscount != null">
+        CommentsCount,
+      </if>
+      <if test="creationts != null">
+        CreationTs,
+      </if>
+      <if test="descriptionhtml != null">
+        DescriptionHtml,
+      </if>
+      <if test="downvotecount != null">
+        DownVoteCount,
+      </if>
+      <if test="haslongpostcover != null">
+        HasLongPostCover,
+      </if>
+      <if test="isvotemasked != null">
+        IsVoteMasked,
+      </if>
+      <if test="nsfw != null">
+        Nsfw,
+      </if>
+      <if test="promoted != null">
+        Promoted,
+      </if>
+      <if test="sourcedomain != null">
+        SourceDomain,
+      </if>
+      <if test="sourceurl != null">
+        SourceUrl,
+      </if>
+      <if test="type != null">
+        Type,
+      </if>
+      <if test="upvotecount != null">
+        UpVoteCount,
+      </if>
+      <if test="crawlerdate != null">
+        CrawlerDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="globalid != null">
+        #{globalid,jdbcType=INTEGER},
+      </if>
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null">
+        #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="commentscount != null">
+        #{commentscount,jdbcType=INTEGER},
+      </if>
+      <if test="creationts != null">
+        #{creationts,jdbcType=VARCHAR},
+      </if>
+      <if test="descriptionhtml != null">
+        #{descriptionhtml,jdbcType=VARCHAR},
+      </if>
+      <if test="downvotecount != null">
+        #{downvotecount,jdbcType=INTEGER},
+      </if>
+      <if test="haslongpostcover != null">
+        #{haslongpostcover,jdbcType=INTEGER},
+      </if>
+      <if test="isvotemasked != null">
+        #{isvotemasked,jdbcType=INTEGER},
+      </if>
+      <if test="nsfw != null">
+        #{nsfw,jdbcType=INTEGER},
+      </if>
+      <if test="promoted != null">
+        #{promoted,jdbcType=INTEGER},
+      </if>
+      <if test="sourcedomain != null">
+        #{sourcedomain,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceurl != null">
+        #{sourceurl,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="upvotecount != null">
+        #{upvotecount,jdbcType=INTEGER},
+      </if>
+      <if test="crawlerdate != null">
+        #{crawlerdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kidd.gagcrawler.model.GagPo">
+    update Gag
+    <set>
+      <if test="id != null">
+        Id = #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        Title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null">
+        Images = #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        Url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="commentscount != null">
+        CommentsCount = #{commentscount,jdbcType=INTEGER},
+      </if>
+      <if test="creationts != null">
+        CreationTs = #{creationts,jdbcType=VARCHAR},
+      </if>
+      <if test="descriptionhtml != null">
+        DescriptionHtml = #{descriptionhtml,jdbcType=VARCHAR},
+      </if>
+      <if test="downvotecount != null">
+        DownVoteCount = #{downvotecount,jdbcType=INTEGER},
+      </if>
+      <if test="haslongpostcover != null">
+        HasLongPostCover = #{haslongpostcover,jdbcType=INTEGER},
+      </if>
+      <if test="isvotemasked != null">
+        IsVoteMasked = #{isvotemasked,jdbcType=INTEGER},
+      </if>
+      <if test="nsfw != null">
+        Nsfw = #{nsfw,jdbcType=INTEGER},
+      </if>
+      <if test="promoted != null">
+        Promoted = #{promoted,jdbcType=INTEGER},
+      </if>
+      <if test="sourcedomain != null">
+        SourceDomain = #{sourcedomain,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceurl != null">
+        SourceUrl = #{sourceurl,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        Type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="upvotecount != null">
+        UpVoteCount = #{upvotecount,jdbcType=INTEGER},
+      </if>
+      <if test="crawlerdate != null">
+        CrawlerDate = #{crawlerdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where GlobalId = #{globalid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kidd.gagcrawler.model.GagPo">
+    update Gag
+    set Id = #{id,jdbcType=VARCHAR},
+      Title = #{title,jdbcType=VARCHAR},
+      Images = #{images,jdbcType=VARCHAR},
+      Url = #{url,jdbcType=VARCHAR},
+      CommentsCount = #{commentscount,jdbcType=INTEGER},
+      CreationTs = #{creationts,jdbcType=VARCHAR},
+      DescriptionHtml = #{descriptionhtml,jdbcType=VARCHAR},
+      DownVoteCount = #{downvotecount,jdbcType=INTEGER},
+      HasLongPostCover = #{haslongpostcover,jdbcType=INTEGER},
+      IsVoteMasked = #{isvotemasked,jdbcType=INTEGER},
+      Nsfw = #{nsfw,jdbcType=INTEGER},
+      Promoted = #{promoted,jdbcType=INTEGER},
+      SourceDomain = #{sourcedomain,jdbcType=VARCHAR},
+      SourceUrl = #{sourceurl,jdbcType=VARCHAR},
+      Type = #{type,jdbcType=VARCHAR},
+      UpVoteCount = #{upvotecount,jdbcType=INTEGER},
+      CrawlerDate = #{crawlerdate,jdbcType=TIMESTAMP}
+    where GlobalId = #{globalid,jdbcType=INTEGER}
+  </update>
+</mapper>
