@@ -84,12 +84,29 @@
 <body>
 <div>
     <ul>
-        <li th:each="gagPo:${gagPos}">
+        <li th:each="gagPo:${gagPhotoPos}">
             <a th:href="${gagPo.url}" target="_blank">
                 <div class="content">
                     <div class="img-wrap">
                         <div class="img-box">
                             <img th:src="@{'https://img-9gag-fun.9cache.com/photo/'+${gagPo.id}+'_700b.jpg'}"/>
+                        </div>
+                    </div>
+                    <div class="title" th:text="${gagPo.title}"></div>
+                </div>
+            </a>
+        </li>
+        <hr/>
+        <li th:each="gagPo:${gagVideoPos}">
+            <a th:href="${gagPo.url}" target="_blank">
+                <div class="content">
+                    <div class="img-wrap">
+                        <div class="img-box">
+                            <video preload="auto" controls width="100%" height="100%"
+                                   th:src="@{'https://img-9gag-fun.9cache.com/photo/'+${gagPo.id}+'_460sv.mp4'}"
+                                   th:poster="@{'https://img-9gag-fun.9cache.com/photo/'+${gagPo.id}+'_460swp.webp'}"
+                                   loop="loop">
+                            </video>
                         </div>
                     </div>
                     <div class="title" th:text="${gagPo.title}"></div>

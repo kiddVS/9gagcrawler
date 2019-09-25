@@ -26,7 +26,13 @@ public class GagService {
         }
     }
 
+    //获取图片
     public List<GagPo> selectPhotoGagsGtDateTime(LocalDateTime dateTime){
         return gagPoMapper.selectPhotoGagsGtDateTime(dateTime);
+    }
+
+    //获取视频
+    public List<GagPo> selectVideoGagsGtDateTime(LocalDateTime dateTime){
+        return gagPoMapper.selectVideoGagsGtDateTime(dateTime);
     }
 }

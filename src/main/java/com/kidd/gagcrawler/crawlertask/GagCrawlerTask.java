@@ -1,6 +1,7 @@
 package com.kidd.gagcrawler.crawlertask;
 
 import com.alibaba.fastjson.JSON;
+import com.kidd.gagcrawler.Application;
 import com.kidd.gagcrawler.model.Gag;
 import com.kidd.gagcrawler.model.GagPo;
 import com.kidd.gagcrawler.model.HotGagVo;
@@ -19,6 +20,7 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,21 +43,23 @@ public class GagCrawlerTask {
     @Autowired
     private TemplateEngine templateEngine;
 
-    //@Scheduled(cron = "0/5 * * * * ?")
+//    @Scheduled(cron = "0/5 * * * * ?")
+    //@Scheduled(cron = "0 */300 * * * ?")
     //或直接指定时间间隔，例如：5秒 (单位：毫秒)
-    @Scheduled(fixedRate=500000)
+    @Scheduled(fixedRate=18000000)
     private void configureTasks() throws IOException, InterruptedException {
         System.err.println("执行静态定时任务时间: " + LocalDateTime.now());
 
         // 1、爬取热门gag信息，存入数据库,发生异常之后记录并且发送邮件
-        //crawl9gagInfo(gagHotUrl);
+        crawl9gagInfo(gagHotUrl);
 
         // 2、构造html邮件
         String htmlContent = constructGagHtmlContent();
 
         // 3、发送邮件
         try {
-            mailService.sendHtmlMail("13683177737@163.com", LocalDateTime.now()+"的9Gag热门数据", htmlContent);
+//            mailService.sendHtmlMail("13683177737@163.com", LocalDateTime.now()+"的9Gag热门数据", htmlContent);
+            mailService.sendHtmlMail("13683177737@163.com", LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM月dd日HH时"))+"的9Gag热门数据", htmlContent);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -63,13 +67,13 @@ public class GagCrawlerTask {
 
     private void crawl9gagInfo(String gagUrl) throws IOException, InterruptedException {
 
-        // 第一次尝试爬取热门gag
+        // 第一次尝试爬取热门gag（第一页）
         String hotGags = "";
         try {
             hotGags = HttpsUtils.doGetStr(gagUrl);
 
-            // mock
-            // hotGags = Application.getResource();
+            //mock
+            //hotGags = Application.getResource();
 
         } catch (Exception e) {
             System.out.println("The First Crawler Try Of GagUrl Fail, Reason:" + e.getMessage());
@@ -87,7 +91,7 @@ public class GagCrawlerTask {
         Integer currentPage = 2;
         String nextCursor = hotGagVoFirstTry.getData().getNextCursor();
         System.out.println("first page nextcursor:"+nextCursor);
-        while (currentPage <= 10) {
+        while (currentPage <= 20) {
             System.out.println(String.format("开始抓取第%d页",currentPage));
             Thread.sleep(5000);
             String currentHotUrl = URLDecoder.decode( String.format("%s?%s", gagUrl, nextCursor), "GBK");
@@ -96,7 +100,7 @@ public class GagCrawlerTask {
             System.out.println("hotGagVoStr:"+hotGagVoStr);
 
             // mock
-            //String hotGagVoStr = Application.getResource();
+            // String hotGagVoStr = Application.getResource();
 
             HotGagVo hotGagVo = JSON.parseObject(hotGagVoStr, HotGagVo.class);
             if (hotGagVo == null) return;
@@ -114,13 +118,16 @@ public class GagCrawlerTask {
 
     // 构造今天的图片html邮件
     public  String constructGagHtmlContent(){
-        LocalDateTime dateTime = LocalDateTime.now().minusHours(10);
-        List<GagPo> gagPos = gagService.selectPhotoGagsGtDateTime(dateTime);
-        if(gagPos == null){
+        LocalDateTime dateTime = LocalDateTime.now().minusHours(2);
+        List<GagPo> gagPhotoPos = gagService.selectPhotoGagsGtDateTime(dateTime);
+        List<GagPo> gagVideoPos = gagService.selectVideoGagsGtDateTime(dateTime);
+
+        if(gagPhotoPos == null){
             return "";
         }
         Context context = new Context();
-        context.setVariable("gagPos", gagPos);
+        context.setVariable("gagPhotoPos", gagPhotoPos);
+        context.setVariable("gagVideoPos", gagVideoPos);
         String emailContent = templateEngine.process("gagTemplate2.html", context);
         return emailContent;
     }

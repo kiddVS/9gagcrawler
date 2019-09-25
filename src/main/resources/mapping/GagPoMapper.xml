@@ -48,6 +48,14 @@
     and Type = 'Photo'
   </select>
 
+  <select id="selectVideoGagsGtDateTime" parameterType="java.time.LocalDateTime" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from Gag
+    where CrawlerDate > #{crawlerdate,jdbcType=TIMESTAMP}
+    and Type = 'Animated'
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from Gag
     where GlobalId = #{globalid,jdbcType=INTEGER}

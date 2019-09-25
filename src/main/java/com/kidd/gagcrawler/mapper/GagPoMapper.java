@@ -21,4 +21,6 @@ public interface GagPoMapper {
     GagPo selectById(String id);
 
     List<GagPo> selectPhotoGagsGtDateTime(LocalDateTime dateTime);
+
+    List<GagPo> selectVideoGagsGtDateTime(LocalDateTime dateTime);
 }
